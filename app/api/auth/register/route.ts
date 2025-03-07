@@ -10,6 +10,7 @@ import User from "@/models/User";
 export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json();
+    console.log({ email, password });
 
     if (!email || !password) {
       return NextResponse.json(
@@ -31,12 +32,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    await User.create(
-      { message: "user registered successfully" },
-      { status: 201 }
-    );
+      const createdUser = await User.create({ email, password });
+      
+      return NextResponse.json(
+          { message: "User Registered successfully" },
+          { status: 201 }, 
+          
+      )
+
   } catch (error) {
-    console.error("User Registration Error: ", error);
+    console.error("User registration Error: ", error);
     return NextResponse.json(
       {
         error: "Filed to register the user",
@@ -45,4 +50,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
- 
